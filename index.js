@@ -13,7 +13,7 @@
 				}
 
 				$scope.$watch('objectURL', function (objectURL) {
-					elem.attr('src', objectURL);
+					elem.attr('src', objectURL || attrs.onError);
 				});
 
 				$scope.$on('$destroy', function () {
@@ -29,7 +29,7 @@
 						$http.get(url, { responseType: 'arraybuffer' })
 							.then(function (response) {
 								var blob = new Blob(
-									[ response.data ], 
+									[ response.data ],
 									{ type: response.headers('Content-Type') }
 								);
 								$scope.objectURL = URL.createObjectURL(blob);
