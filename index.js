@@ -19,7 +19,7 @@
           }
 
           $scope.$watch('objectURL', function (objectURL) {
-            elem.attr('src', objectURL);
+            elem.attr('src', objectURL || attrs.onError));
           });
 
           $scope.$on('$destroy', function () {
