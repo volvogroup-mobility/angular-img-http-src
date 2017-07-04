@@ -2,9 +2,10 @@
   "name": "angular-img-http-src",
   "version": "1.0.1",
   "authors": [
-    "Doug Moscrop <doug.moscrop@gmail.com>"
+    "Doug Moscrop <doug.moscrop@gmail.com>",
+    "Dennis Parsons <dnnsprsns@gmail.com>"
   ],
-  "description": "Fetch images via $http and set src to a Blob URL",
+  "description": "Fetch images via $http and set src to a Blob URL, define default image into onError attribute in case",
   "main": "index.js",
   "moduleType": [
     "globals"
