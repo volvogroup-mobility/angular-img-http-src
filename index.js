@@ -38,6 +38,11 @@
                             }
                         })
 							.then(function (response) {
+								if (response.data === undefined
+									|| response.data.byteLength === 0) {
+									return;
+								}
+
 								var blob = new Blob(
 									[ response.data ],
 									{ type: response.headers('Content-Type') }
