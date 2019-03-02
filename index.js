@@ -1,57 +1,57 @@
+/*global angular, Blob, URL */
+
 (function () {
-	'use strict';
-	/*global angular, Blob, URL */
+  'use strict';
 
-	angular.module('angular.img', [
-	]).directive('httpSrc', ['$http', function ($http) {
-		return {
-			// do not share scope with sibling img tags and parent
-			// (prevent show same images on img tag)
-			scope: {
-				httpSrc: '@'
-			},
-			link: function ($scope, elem, attrs) {
-				function revokeObjectURL() {
-					if ($scope.objectURL) {
-						URL.revokeObjectURL($scope.objectURL);
-					}
-				}
+  angular.module('angular.img', [])
+    .directive('httpSrc', ['$http', function ($http) {
+      return {
+        // do not share scope with sibling img tags and parent
+        // (prevent show same images on img tag)
+        scope: {
+          httpSrc: '@'
+        },
+        link: function ($scope, elem, attrs) {
+          function revokeObjectURL() {
+            if ($scope.objectURL) {
+              URL.revokeObjectURL($scope.objectURL);
+            }
+          }
 
-				$scope.$watch('objectURL', function (objectURL) {
-					elem.attr('src', objectURL || attrs.onError);
-				});
+          $scope.$watch('objectURL', function (objectURL) {
+            elem.attr('src', objectURL);
+          });
 
-				$scope.$on('$destroy', function () {
-					revokeObjectURL();
-				});
+          $scope.$on('$destroy', function () {
+            revokeObjectURL();
+          });
 
-				attrs.$observe('httpSrc', function (url) {
-					revokeObjectURL();
+          attrs.$observe('httpSrc', function (url) {
+            revokeObjectURL();
 
-					if(url && url.indexOf('data:') === 0) {
-						$scope.objectURL = url;
-					} else if(url) {
-                        $http.get(url, {
-                            responseType: 'arraybuffer',
-                            headers: {
-                                'accept': 'image/webp,image/*,*/*;q=0.8'
-                            }
-                        })
-							.then(function (response) {
-								if (response.data === undefined
-									|| response.data.byteLength === 0) {
-									return;
-								}
+            if (url && url.indexOf('data:') === 0) {
+              $scope.objectURL = url;
+            } else if (url) {
+              $http.get(url, {
+                  responseType: 'arraybuffer',
+                  cache: true,
+                  headers: {
+                    'accept': 'image/webp,image/*,*/*;q=0.8'
+                  }
+                })
+                .then(function (response) {
+                  if (response.data === undefined || response.data.byteLength === 0) {
+                    return;
+                  }
 
-								var blob = new Blob(
-									[ response.data ],
-									{ type: response.headers('Content-Type') }
-								);
-								$scope.objectURL = URL.createObjectURL(blob);
-							});
-					}
-				});
-			}
-		};
-	}]);
-}());
+                  var blob = new Blob(
+                    [response.data], { type: response.headers('Content-Type') }
+                  );
+                  $scope.objectURL = URL.createObjectURL(blob);
+                });
+            }
+          });
+        }
+      };
+    }]);
+})();
